@@ -3,8 +3,9 @@
 ---
 
 <dr>
+<dr>
 
-> ##  파이썬 퀴즈 프로젝트 진행 기록 
+> ##  2) 파이썬 퀴즈 프로젝트 진행 기록 
 
 ### ① 프로젝트 기초 공사 (작업실 세팅)
 - mkdir python_quiz : 프로젝트 폴더 생성 
@@ -61,5 +62,5 @@ if __name__ == "__main__":
     print("보기:", test_quiz.options)
     print("정답 번호:", test_quiz.answer)
     print("테스트 성공! 클래스가 완벽하게 작동합니다. 🎉")
-    ```
-실핼화면 : ![테스트 결과](./images/test.png)
+```
+- 실핼화면 : ![테스트 결과](./images/test.png)
