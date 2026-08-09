@@ -1,26 +1,66 @@
-# **파이썬 퀴즈 게임 프로젝트**
-#### 파이썬을 이용한 간단한 퀴즈 게임 프로그램입니다.
+# **Python과 Git으로 만드는 나만의 콘솔 퀴즈 게임**
+#### Python 기본 문법과 클래스 개념을 활용하여 터미널에서 동작하는 퀴즈 게임을 구현하는 프로젝트입니다. 메뉴 기반 입력 흐름, 퀴즈 출제/등록/목록/점수 확인 기능을 만들고, JSON 파일 저장을 통해 프로그램 종료 후에도 데이터가 유지되도록 구현합니다. 또한 Git과 GitHub를 사용해 기능별 변경 이력을 관리하며 개발 과정을 기록합니다.
+조금 더 짧게 가면:
 ---
 
 <dr>
 
-##  파이썬 퀴즈 프로젝트 진행 기록 (Roadmap)
+##  파이썬 퀴즈 프로젝트 진행 기록 
 
 ### ① 프로젝트 기초 공사 (작업실 세팅)
-- mkdir python_quiz: 프로젝트 폴더 생성 (내 작업실 이름 정하기)
-- cd python_quiz: 폴더로 이동 (작업실 안으로 들어가기)
-- git init: Git 저장소 시작 (이 폴더의 모든 변화를 기록할 준비 완료)
-- git config --global user.name "손희진": 내 이름 등록 (기록자 이름 남기기)
-- git config --global user.email "이메일주소": 내 이메일 등록 (기록자 연락처 남기기)
+- mkdir python_quiz : 프로젝트 폴더 생성 
+- cd python_quiz : 폴더로 이동
+- git init / git config : Git 로컬 저장소 생성 및 사용자 정보(이름/이메일) 설정
 
 ### ② 첫 기록 남기기 (로컬 저장소 저장)
-- touch README.md: 프로젝트 설명서 파일 생성
-- quiz_game.py 작성: 파이썬 클래스 구조와 기본 실행 코드 작성
-- git add .: 변경된 모든 파일(README, py파일)을 장바구니에 담기
-- git commit -m "Initial commit: 프로젝트 시작 및 README 작성": 현재 상태를 사진 찍듯 내 컴퓨터에 영구 기록 (커밋 번호: d28ac80)
+- touch README.md : 프로젝트 설명서 파일 생성
+- quiz_game.py 작성 : 파이썬 클래스 구조와 기본 실행 코드 작성
+- git add . : 변경된 전체 파일 스테이징(Staging)
+- git commit -m "Initial commit: 프로젝트 시작 " : 첫 번째 버전 기록 
 
 ### ③ 세상에 공개하기 (GitHub 연결)
-- GitHub 저장소 이름 변경: my-docker3 → python_quiz로 변경 (VS 코드 폴더명과 일치시킴)
-- git remote add origin https://github.com/jin1732/python_quiz.git: 내 컴퓨터와 GitHub 저장소를 연결 (원격 주소 등록)
-- git branch -M main: 기본 브랜치 이름을 master에서 main으로 변경 (최신 표준)
-- git push -u origin main: 내 컴퓨터의 기록을 GitHub 서버로 전송 (최종 업로드)
+- GitHub 저장소 생성 : python_quiz(VS 코드 폴더명과 일치시킴)
+- git remote add origin [URL] : GitHub 원격 저장소 연결
+- git branch -M main : 기본 브랜치명을 main으로 설정
+- git push -u origin main : 로컬 커밋 내역을 GitHub로 최종 업로드
+
+### ④ 클래스 기본 구조 설계 (객체 지향 설계)
+- class Quiz: : 개별 퀴즈 데이터(질문, 보기, 정답)를 담아둘 붕어빵 틀 만들기
+- class QuizGame: : 게임 전체 흐름(문제 출제, 점수 계산)을 관리하는 틀 만들기
+- __init__ 메서드 : 클래스가 생성될 때 필요한 초기 변수(속성) 설정하기
+- 임시 데이터 테스트 : 만든 클래스로 객체를 생성해서 코드가 잘 실행되는지 확인하기
+```zsh
+# 1. 개별 퀴즈 데이터를 담는 클래스 (퀴즈 붕어빵 틀)
+class Quiz:
+    # 퀴즈가 만들어질 때 질문, 보기, 정답을 초기화(세팅)하는 메서드
+    def __init__(self, question, options, answer):
+        self.question = question
+        self.options = options
+        self.answer = answer
+
+# 2. 퀴즈 게임 전체 흐름을 관리하는 클래스 (게임기)
+class QuizGame:
+     # 게임기가 켜질 때 초기 상태를 세팅하는 메서드
+    def __init__(self):
+        self.quizzes = [] # 여러 개의 퀴즈(Quiz 객체)를 담아둘 빈 주머니(리스트)
+        self.score = 0    # 플레이어의 현재 점수 (0점으로 시작)
+
+    # 게임을 시작하는 기능을 가진 메서드
+    def start_game(self):
+        print("게임을 시작합니다!") # 화면에 시작 메시지 출력
+
+# 3. 프로그램 실행 부분(파이썬 파일이 직접 실행될 때만 아래 코드를 작동)
+if __name__ == "__main__":
+    game = QuizGame() # QuizGame 클래스(틀)를 이용해 'game'이라는 실제 게임기(객체) 생성
+    game.start_game() # 만들어진 게임기의 start_game() 기능 실행
+
+    # 보기(options)가 들어간 퀴즈 객체를 하나 만들어봅니다.
+    test_quiz = Quiz("파이썬의 창시자는?", ["1. 스티브 잡스", "2. 귀도 반 로섬", "3. 일론 머스크"], 2)
+
+    print("\n--- 임시 데이터 테스트 ---")
+    print("질문:", test_quiz.question)
+    print("보기:", test_quiz.options)
+    print("정답 번호:", test_quiz.answer)
+    print("테스트 성공! 클래스가 완벽하게 작동합니다. 🎉")
+    ```
+실핼화면 : ![테스트 결과](./images/test.png)
