@@ -16,7 +16,7 @@
 - touch README.md : 프로젝트 설명서 파일 생성
 - quiz_game.py 작성 : 파이썬 클래스 구조와 기본 실행 코드 작성
 - git add . : 변경된 전체 파일 스테이징(Staging)
-- git commit -m "Initial commit: 프로젝트 시작 " : 첫 번째 버전 기록 
+- git commit -m "Initial commit: 프로젝트 시작 및 README 작성" : 첫 번째 버전 기록 
 
 ### ③ 세상에 공개하기 (GitHub 연결)
 - GitHub 저장소 생성 : python_quiz(VS 코드 폴더명과 일치시킴)
