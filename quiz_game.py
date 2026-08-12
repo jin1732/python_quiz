@@ -4,6 +4,44 @@ from datetime import datetime
 
 STATE_FILE = "state.json"
 
+default_quiz = [
+    {
+        "question": "1 + 1은?", 
+        "options": ["1", "2", "3", "4"], 
+        "answer": "2"
+    },
+    {
+        "question": "파이썬의 창시자는?", 
+        "options": ["귀도 반 로섬", "스티브 잡스", "빌 게이츠", "일론 머스크"], 
+        "answer": "귀도 반 로섬"
+    }
+]
+
+# 💡 복구(초기화) 기능이 완벽하게 들어간 함수
+def load_quiz_data():
+    try:
+        # 1. 정상적으로 열기 시도
+        with open("quiz.json", "r", encoding="utf-8") as file:
+            return json.load(file)
+            
+    except FileNotFoundError:
+        # 2. 파일이 없을 때 -> 안내 메시지 띄우고 파일 새로 만들기(초기화)
+        print("\n🚨 경고: quiz.json 파일을 찾을 수 없습니다. 기본 퀴즈로 초기화합니다!")
+        
+        with open("quiz.json", "w", encoding="utf-8") as file:
+            json.dump(default_quiz, file, ensure_ascii=False, indent=4) # 파일 생성!
+            
+        return default_quiz
+        
+    except json.JSONDecodeError:
+        # 3. 파일이 손상되었을 때 -> 안내 메시지 띄우고 파일 덮어쓰기(복구)
+        print("\n🚨 경고: quiz.json 파일이 손상되었습니다. 기본 퀴즈로 복구합니다!")
+        
+        with open("quiz.json", "w", encoding="utf-8") as file:
+            json.dump(default_quiz, file, ensure_ascii=False, indent=4) # 파일 복구!
+            
+        return default_quiz
+    
 # 1. 퀴즈 클래스
 class Quiz:
     def __init__(self, question, options, answer):
@@ -51,7 +89,7 @@ class QuizGame:
                     self.score += 1
                 else:
                     print(f"❌ 틀렸습니다. 정답은 '{q.answer}'입니다.")
-                    
+
             except (ValueError, IndexError):
                 print("⚠️ 잘못된 입력입니다. 오답 처리됩니다.")
         
@@ -78,6 +116,22 @@ def save_data(data):
     with open(STATE_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
+# 1. 최고 점수 불러오기
+def load_high_score():
+    data = load_data()          # 학생님이 만든 함수로 데이터를 불러옵니다.
+    scores = data["scores"]     # "scores" 리스트를 가져옵니다.
+    
+    if len(scores) > 0:         # 리스트에 점수가 하나라도 있다면?
+        return max(scores)      # max() 함수로 가장 높은 점수를 찾아서 반환!
+    else:
+        return 0                # 아직 게임을 한 번도 안 했다면 0점 반환!
+
+# 2. 내 점수 저장하기
+def save_score(my_score):
+    data = load_data()          # 1. 기존 데이터를 불러옵니다.
+    data["scores"].append(my_score) # 2. "scores" 리스트에 내 점수를 추가합니다.
+    save_data(data)             # 3. 변경된 데이터를 다시 파일에 저장합니다.
+    
 def save_score(score):
     data = load_data()
     new_score = {
