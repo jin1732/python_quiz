@@ -1,22 +1,24 @@
-import json #맨 윗줄에 json 모듈 불러오기
-# 1. 클래스들 (Quiz, QuizGame)
+import json
+import os
+from datetime import datetime
+
+STATE_FILE = "state.json"
+
+# 1. 퀴즈 클래스
 class Quiz:
     def __init__(self, question, options, answer):
         self.question = question
         self.options = options
         self.answer = answer
 
-    def display(self):
-        print(f"\n문제: {self.question}")
-        for i in range(len(self.options)):
-            print(f"{i+1}. {self.options[i]}")
+    def to_dict(self):
+        return {
+            "question": self.question,
+            "options": self.options,
+            "answer": self.answer
+        }
 
-    def check_answer(self, user_answer):
-        if user_answer == self.answer:
-            return True
-        else:
-            return False
-
+# 2. 게임 엔진 클래스
 class QuizGame:
     def __init__(self, questions):
         self.questions = questions
@@ -24,70 +26,91 @@ class QuizGame:
 
     def play(self):
         self.score = 0
-        print("\n🍿 천만 영화 퀴즈 게임을 시작합니다! 🍿")
+        print(f"\n총 {len(self.questions)}문제를 시작합니다!")
+        for i, q in enumerate(self.questions, 1):
+            print(f"\nQ{i}. {q.question}")
+            for idx, opt in enumerate(q.options, 1):
+                print(f"  {idx}) {opt}")
+            
+            try:
+                user_ans = int(input("정답 번호를 입력하세요: "))
+                if q.options[user_ans-1] == q.answer:
+                    print("✅ 정답입니다!")
+                    self.score += 1
+                else:
+                    print(f"❌ 틀렸습니다. 정답은 '{q.answer}'입니다.")
+            except (ValueError, IndexError):
+                print("⚠️ 잘못된 입력입니다. 오답 처리됩니다.")
+        
+        print(f"\n게임 종료! 최종 점수: {self.score}/{len(self.questions)}")
+        return self.score
 
-        for quiz in self.questions:
-            quiz.display()
-
-            while True:
-                try:
-                    raw = input("정답 번호를 입력하세요 (1~4): ").strip()
-
-                    if raw == "":  
-                        print("⚠️ 번호를 입력해주세요.")
-                        continue
-
-                    user_input = int(raw)  
-
-                    if user_input < 1 or user_input > 4: 
-                        print("⚠️ 1~4 사이의 번호만 입력할 수 있어요.")
-                        continue
-
-                    break  
-
-                except ValueError:  
-                    print("⚠️ 숫자만 입력해주세요! (예: 1)")
-
-            if quiz.check_answer(user_input):
-                print("✅ 정답입니다! 🎉")
-                self.score += 1
-            else:
-                print(f"❌ 땡! 오답입니다. 😢 (정답은 {quiz.answer}번)")
-
-        print(f"\n게임 종료! 최종 점수 {self.score} / {len(self.questions)}점 입니다.")
-
-        if self.score == len(self.questions):
-            print("🏆 완벽합니다! 당신은 진정한 천만 영화 마스터!")
-        elif self.score >= 3:
-            print("👍 훌륭합니다! 영화를 꽤 좋아하시는군요!")
-        else:
-            print("🎬 아쉽네요. 이번 주말엔 영화 감상 어떠신가요?")
-# 2. 도구 함수 (데이터 불러오기)
-def load_quizzes(filename):
-    with open(filename, 'r', encoding='utf-8') as file:
-        data = json.load(file)
+# 3. 데이터 관리 함수들
+def load_data():
+    if not os.path.exists(STATE_FILE):
+        initial_data = {
+            "quizzes": [
+                {"question": "영화 '기생충'의 감독은?", "options": ["봉준호", "박찬욱", "이창동", "연상호"], "answer": "봉준호"},
+                {"question": "역대 한국 박스오피스 1위 영화는?", "options": ["명량", "극한직업", "신과함께", "국제시장"], "answer": "명량"}
+            ],
+            "scores": []
+        }
+        save_data(initial_data)
+        return initial_data
     
-    quiz_list = []
-    for item in data:
-        quiz = Quiz(item["question"], item["options"], item["answer"])
-        quiz_list.append(quiz)
-    return quiz_list
+    with open(STATE_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
 
-# 3. 메인 실행 함수 (프로그램의 전체 흐름)
+def save_data(data):
+    with open(STATE_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+def save_score(score):
+    data = load_data()
+    new_score = {
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "score": score
+    }
+    data["scores"].append(new_score)
+    save_data(data)
+    print("📝 점수가 저장되었습니다.")
+
+def add_quiz():
+    print("\n--- 새 퀴즈 추가 ---")
+    question = input("질문을 입력하세요: ")
+    options = []
+    for i in range(4):
+        options.append(input(f"보기 {i+1}번을 입력하세요: "))
+    answer = input("정답 내용을 입력하세요 (보기 중 하나와 일치해야 함): ")
+    
+    data = load_data()
+    new_quiz = Quiz(question, options, answer)
+    data["quizzes"].append(new_quiz.to_dict())
+    save_data(data)
+    print("✅ 퀴즈가 추가되었습니다!")
+
+def view_quizzes():
+    data = load_data()
+    print("\n--- 현재 등록된 퀴즈 목록 ---")
+    for i, q in enumerate(data["quizzes"], 1):
+        print(f"{i}. {q['question']}")
+
+def show_scores():
+    data = load_data()
+    print("\n--- 최근 점수 기록 ---")
+    if not data["scores"]:
+        print("기록이 없습니다.")
+    for s in data["scores"][-5:]:  # 최근 5개만 표시
+        print(f"[{s['date']}] 점수: {s['score']}")
+
+# 4. 메인 함수
 def main():
-    # 여기서 load_quizzes를 호출합니다!
-    movie_questions = load_quizzes("quizzes.json")
-    if not movie_questions:
-        return # 데이터 없으면 종료
-
-    game = QuizGame(movie_questions)
-
     while True:
         print("\n=== 🎬 천만 영화 퀴즈 게임 ===")
         print("1. 퀴즈 풀기")
-        print("2. 퀴즈 추가하기 (준비 중)")
-        print("3. 퀴즈 목록 보기 (준비 중)")
-        print("4. 최근 점수 확인 (준비 중)")
+        print("2. 퀴즈 추가하기")
+        print("3. 퀴즈 목록 보기")
+        print("4. 최근 점수 확인")
         print("5. 게임 종료")
     
         try:
@@ -97,14 +120,27 @@ def main():
                 print("⚠️ 아무것도 입력되지 않았어요. 번호를 입력해주세요.")
                 continue
                 
-            if choice == '1':
-                game.play()  
+            if choice == "1":
+                # 게임 시작 직전에 데이터를 새로 불러와서 객체로 변환합니다.
+                data = load_data()
+                movie_questions = []
+                for item in data["quizzes"]:
+                    movie_questions.append(Quiz(item["question"], item["options"], item["answer"]))
+                
+                if not movie_questions:
+                    print("❌ 퀴즈가 없습니다. 먼저 추가해주세요.")
+                    continue
+                
+                game = QuizGame(movie_questions)
+                score = game.play() 
+                save_score(score) 
+
             elif choice == '2':
-                print("🛠️ 퀴즈 추가 기능은 아직 준비 중입니다.")
+                add_quiz()
             elif choice == '3':
-                print("🛠️ 퀴즈 목록 보기 기능은 아직 준비 중입니다.")
+                view_quizzes()
             elif choice == '4':
-                print("🛠️ 최근 점수 확인 기능은 아직 준비 중입니다.")
+                show_scores()
             elif choice == '5':
                 print("👋 게임을 종료합니다. 플레이해주셔서 감사합니다!")
                 break  

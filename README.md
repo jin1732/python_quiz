@@ -455,3 +455,66 @@ quiz_project/
 │
 └── if __name__ == "__main__":      # [실행 스위치]
 ```
+
+### ⑧ 점수 저장 및 기록 확인 기능 구현
+- 점수 저장 기능 : 게임이 끝나면 datetime 모듈을 사용해 현재 날짜/시간과 함께 점수를 scores.json 파일에 저장.
+- 데이터 누적 : 기존에 저장된 점수 리스트를 불러와서 새로운 점수를 추가(append)한 뒤 다시 저장하는 방식으로 기록을 유지.
+- 역대 기록 조회 : scores.json 파일을 읽어와서 사용자가 여태까지 획득한 점수들을 날짜별로 화면에 출력.
+- 예외 처리 : scores.json 파일이 없거나 데이터가 비어있는 경우에도 프로그램이 멈추지 않도록 try-except 문법 적용.
+```zsh
+# [코드] datetime 활용 및 점수 저장 로직
+from datetime import datetime  # datetime 모듈에서 datetime 클래스만 가져오기
+
+# [코드] 점수 저장 및 조회 핵심 로직
+def save_score(score):
+    # 현재 시간을 '2023-10-27 15:30' 형식의 문자열로 변환
+    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    new_score = {"date": now, "score": score}
+    # ... (파일 읽고 쓰기 로직) ...
+
+def show_scores():
+    try:
+        with open('scores.json', 'r', encoding='utf-8') as f:
+            scores = json.load(f)
+        # ... (화면 출력 로직) ...
+    except FileNotFoundError:
+        print("기록이 없습니다.")
+```
+- 실핼화면 : ![테스트 결과](./images/test5.png)
+
+#### * **파이썬 파일 입출력 & 시스템 용어**
+- **from 모듈 import 기능** : 모듈 전체가 아닌 필요한 기능만 골라서 가져오는 문법.  
+datetime.datetime.now() 대신 datetime.now()라고 짧게 쓸 수 있게 해줌.
+- **datetime.now()** : 현재 컴퓨터의 날짜와 시간 정보를 가져오는 함수.
+- **strftime()** : 'string format time'의 약자로, 날짜 데이터를 우리가 원하는 글자 형식(예: %Y년 %m월 %d일)으로 예쁘게 바꿔주는 함수.
+- **json.dump()** : 파이썬의 리스트나 딕셔너리 데이터를 JSON 파일에 '덤프(저장)'하는 함수.
+- **json.load()** : JSON 파일에 저장된 텍스트를 파이썬에서 계산할 수 있는 데이터로 '로드(불러오기)'하는 함수.
+- **with open()** : 파일을 열고 닫는 과정을 안전하게 처리해주는 문법. (파일 작업 시 필수!)
+- **try - except** : 프로그램 실행 중 발생할 수 있는 에러(예: 파일이 없음)를 미리 예상해서 부드럽게 처리하는 예외 처리 문법.
+
+### ⑨ 퀴즈 관리 및 기록 조회 시스템 통합 (메뉴 2, 3, 4번 구현)
+- 퀴즈 추가 기능 (2번) : 사용자로부터 새로운 문제, 보기, 정답을 입력받아 Quiz 객체로 생성하고, 이를 quizzes.json에 영구적으로 저장.
+- 퀴즈 목록 보기 (3번) : 저장된 JSON 데이터를 Quiz 객체 리스트로 불러와, enumerate()를 활용해 번호와 함께 전체 문제 리스트를 화면에 출력.
+- 최근 점수 확인 (4번) : scores.json에 기록된 과거 게임 점수와 날짜 데이터를 불러와 사용자에게 역대 기록을 브리핑.
+```zsh
+def main():
+    while True:
+        print("\n=== 🎬 천만 영화 퀴즈 게임 ===")
+        print("1. 퀴즈 풀기 / 2. 퀴즈 추가하기 / 3. 퀴즈 목록 보기 / 4. 최근 점수 확인 / 5. 게임 종료")
+        choice = input("원하는 메뉴 번호를 입력하세요: ")
+
+        if choice == '2':
+            add_quiz()    # 퀴즈 객체 생성 및 JSON 저장
+        elif choice == '3':
+            view_quizzes() # 객체 리스트 순회 및 출력
+        elif choice == '4':
+            show_scores()  # 점수 기록 파일 로드 및 출력
+        elif choice == '5':
+            print("게임을 종료합니다. 감사합니다!")
+            break
+```
+- 실핼화면 : ![테스트 결과](./images/test6.png)
+
+#### * **파이썬 인터페이스 및 데이터 활용 용어**
+- **enumerate(리스트, 시작번호)** : 리스트의 요소를 꺼낼 때 순서(인덱스)를 함께 제공하는 함수. 퀴즈 목록에 1번, 2번 등 번호를 붙일 때 유용함.
+- **리스트 조인 (' '.join)** : ', '.join(q.options)와 같이 리스트 안에 있는 여러 개의 보기를 하나의 예쁜 문자열로 합쳐서 보여주는 기능.
