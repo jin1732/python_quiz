@@ -291,3 +291,138 @@ while True:
 - **strip() : (공백 제거)** 문자열 양옆에 있는 지저분한 띄어쓰기나 줄바꿈을 깔끔하게 잘라내 주는 함수. (사용자가 " 1 "이라고 쳐도 "1"로 인식하게 해줌)
 - **try / except : (예외 처리)** 에러가 날 것 같은 코드를 try에 넣고, 만약 에러가 터지면 프로그램이 죽는 대신 except로 빠져서 내가 준비한 대처법을 실행하게 만드는 안전장치.
 - **KeyboardInterrupt** : 사용자가 프로그램 실행 중에 강제로 Ctrl + C를 눌러서 끄려고 할 때 발생하는 에러 이름.
+
+### ⑦ JSON 데이터 연동 (파일 입출력)
+- 데이터 분리: 퀴즈 데이터를 코드 내부에 두지 않고, quizzes.json이라는 외부 파일로 분리하여 관리 (데이터 관리의 효율성 증대).
+- 데이터 로드 기능: json 모듈을 사용하여 파일에 저장된 데이터를 파이썬 객체(Quiz 리스트)로 변환하는 load_quizzes() 함수 구현.
+- main 메뉴 시스템: def main() 함수를 정의하여 프로그램의 시작점을 만들고, 그 안에서 while 반복문과 if-elif-else 조건문을 통해 사용자가 기능을 선택할 수 있는 인터페이스 구축.
+```zsh
+import json #맨 윗줄에 json 모듈 불러오기
+# 1. 클래스들 (Quiz, QuizGame)
+class Quiz:
+    def __init__(self, question, options, answer):
+        self.question = question
+        self.options = options
+        self.answer = answer
+
+    def display(self):
+        print(f"\n문제: {self.question}")
+        for i in range(len(self.options)):
+            print(f"{i+1}. {self.options[i]}")
+
+    def check_answer(self, user_answer):
+        if user_answer == self.answer:
+            return True
+        else:
+            return False
+
+class QuizGame:
+    def __init__(self, questions):
+        self.questions = questions
+        self.score = 0
+
+    def play(self):
+        self.score = 0
+        print("\n🍿 천만 영화 퀴즈 게임을 시작합니다! 🍿")
+
+        for quiz in self.questions:
+            quiz.display()
+
+            while True:
+                try:
+                    raw = input("정답 번호를 입력하세요 (1~4): ").strip()
+
+                    if raw == "":  
+                        print("⚠️ 번호를 입력해주세요.")
+                        continue
+
+                    user_input = int(raw)  
+
+                    if user_input < 1 or user_input > 4: 
+                        print("⚠️ 1~4 사이의 번호만 입력할 수 있어요.")
+                        continue
+
+                    break  
+
+                except ValueError:  
+                    print("⚠️ 숫자만 입력해주세요! (예: 1)")
+
+            if quiz.check_answer(user_input):
+                print("✅ 정답입니다! 🎉")
+                self.score += 1
+            else:
+                print(f"❌ 땡! 오답입니다. 😢 (정답은 {quiz.answer}번)")
+
+        print(f"\n게임 종료! 최종 점수 {self.score} / {len(self.questions)}점 입니다.")
+
+        if self.score == len(self.questions):
+            print("🏆 완벽합니다! 당신은 진정한 천만 영화 마스터!")
+        elif self.score >= 3:
+            print("👍 훌륭합니다! 영화를 꽤 좋아하시는군요!")
+        else:
+            print("🎬 아쉽네요. 이번 주말엔 영화 감상 어떠신가요?")
+# 2. 도구 함수 (데이터 불러오기)
+def load_quizzes(filename):
+    with open(filename, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    
+    quiz_list = []
+    for item in data:
+        quiz = Quiz(item["question"], item["options"], item["answer"])
+        quiz_list.append(quiz)
+    return quiz_list
+
+# 3. 메인 실행 함수 (프로그램의 전체 흐름)
+def main():
+    # 여기서 load_quizzes를 호출합니다!
+    movie_questions = load_quizzes("quizzes.json")
+    if not movie_questions:
+        return # 데이터 없으면 종료
+
+    game = QuizGame(movie_questions)
+
+    while True:
+        print("\n=== 🎬 천만 영화 퀴즈 게임 ===")
+        print("1. 퀴즈 풀기")
+        print("2. 퀴즈 추가하기 (준비 중)")
+        print("3. 퀴즈 목록 보기 (준비 중)")
+        print("4. 최근 점수 확인 (준비 중)")
+        print("5. 게임 종료")
+    
+        try:
+            choice = input("원하는 메뉴 번호를 입력하세요 (1~5): ").strip()
+            
+            if choice == "":
+                print("⚠️ 아무것도 입력되지 않았어요. 번호를 입력해주세요.")
+                continue
+                
+            if choice == '1':
+                game.play()  
+            elif choice == '2':
+                print("🛠️ 퀴즈 추가 기능은 아직 준비 중입니다.")
+            elif choice == '3':
+                print("🛠️ 퀴즈 목록 보기 기능은 아직 준비 중입니다.")
+            elif choice == '4':
+                print("🛠️ 최근 점수 확인 기능은 아직 준비 중입니다.")
+            elif choice == '5':
+                print("👋 게임을 종료합니다. 플레이해주셔서 감사합니다!")
+                break  
+            else:
+                print("❌ 잘못된 입력입니다. 1~5 사이의 숫자를 입력해주세요.")
+                
+        except KeyboardInterrupt:
+            print("\n\n🚨 강제 종료되었습니다. 안녕히 가세요!")
+            break
+        except EOFError:
+            print("\n\n🚨 입력이 끊겼습니다. 게임을 종료합니다.")
+            break
+
+if __name__ == "__main__":
+    main()
+```
+#### * **파이썬 파일 입출력 & 시스템 용어**
+- **import json** : 파이썬에서 JSON 형식의 데이터를 다룰 수 있게 해주는 도구 상자를 가져오는 명령어.
+- **with open(파일경로, "r") as f** : 파일을 여는 안전한 방법. with 블록이 끝나면 파일을 자동으로 닫아줌 ("r"은 읽기 모드).
+- **json.load(f)** : 파일(f)에 적힌 JSON 텍스트를 파이썬의 리스트나 딕셔너리로 마법처럼 변환해 주는 함수.
+- **ValueError** : 데이터의 타입이 맞지 않을 때 발생하는 에러. (예: 숫자를 기대했는데 "안녕"을 입력했을 때)
+- **if name == "main":** : 이 파일이 직접 실행될 때만 특정 코드(주로 main())를 작동시키라는 파이썬의 관례적인 약속.
