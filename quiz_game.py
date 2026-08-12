@@ -17,6 +17,18 @@ class Quiz:
             "options": self.options,
             "answer": self.answer
         }
+    def check_answer(self, user_input):
+    # user_input은 사용자가 입력한 번호(예: "2")
+        try:
+            idx = int(user_input) - 1  # 1번을 입력하면 0번 인덱스
+            # 선택한 번호가 범위 내에 있는지 확인
+            if 0 <= idx < len(self.options):
+                selected_answer = self.options[idx]
+                return selected_answer == self.answer
+            else:
+                return False
+        except ValueError:
+            return False
 
 # 2. 게임 엔진 클래스
 class QuizGame:
@@ -33,12 +45,13 @@ class QuizGame:
                 print(f"  {idx}) {opt}")
             
             try:
-                user_ans = int(input("정답 번호를 입력하세요: "))
-                if q.options[user_ans-1] == q.answer:
+                user_ans = int(input("정답 번호를 입력하세요."))
+                if q.check_answer(user_ans):
                     print("✅ 정답입니다!")
                     self.score += 1
                 else:
                     print(f"❌ 틀렸습니다. 정답은 '{q.answer}'입니다.")
+                    
             except (ValueError, IndexError):
                 print("⚠️ 잘못된 입력입니다. 오답 처리됩니다.")
         
