@@ -424,3 +424,34 @@ if __name__ == "__main__":
 - **json.load(f)** : 파일(f)에 적힌 JSON 텍스트를 파이썬의 리스트나 딕셔너리로 마법처럼 변환해 주는 함수.
 - **ValueError** : 데이터의 타입이 맞지 않을 때 발생하는 에러. (예: 숫자를 기대했는데 "안녕"을 입력했을 때)
 - **if name == "main":** : 이 파일이 직접 실행될 때만 특정 코드(주로 main())를 작동시키라는 파이썬의 관례적인 약속.
+
+```zsh
+* **Python 퀴즈 프로젝트 논리 구조도**
+
+quiz_project/
+├── import json
+│
+├── class Quiz:                     # [데이터 틀]
+│   └── __init__(q, o, a)           # 질문, 보기, 정답 저장
+│
+├── class QuizGame:                 # [게임 로직]
+│   └── play()                      # 퀴즈 진행 및 점수 반환
+│
+├── def load_quizzes(filename):     # [데이터 다리]
+│   ├── open(filename)              # 파일 열기
+│   ├── json.load()                 # JSON 파싱
+│   └── for item in data:           # 리스트를 돌며 Quiz 객체 생성 (변환 작업)
+│       └── quiz_list.append(quiz)
+│
+├── def main():                     # [관제탑 & 안전장치]
+│   ├── load_quizzes() 호출         # 데이터 준비
+│   └── while True:                 # 메뉴 무한 반복
+│       └── try:                    # <--- [여기!] 입력 오류 및 강제 종료 방어막
+│           ├── input("번호 입력")
+│           ├── if choice == "1": game.play()
+│           └── elif choice == "5": break
+│       └── except:                 # 예외 발생 시 처리 (KeyboardInterrupt 등)
+│           └── "종료합니다" 또는 "잘못된 입력" 메시지
+│
+└── if __name__ == "__main__":      # [실행 스위치]
+```
