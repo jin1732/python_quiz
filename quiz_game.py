@@ -200,6 +200,15 @@ def main():
                 
                 game = QuizGame(movie_questions)
                 score = game.play() 
+                high_score = load_high_score() # 기존 최고 점수 확인
+
+                print(f"\n게임 종료! 이번 게임의 점수는 {score}점 입니다.")
+
+                if score > high_score:
+                    print(f"🎉 축하합니다! 최고 점수를 갱신했습니다! (기존: {high_score}점 -> 현재: {score}점) 🎉")
+                else:
+                    print(f"아쉽네요! 최고 점수({high_score}점)를 넘지 못했습니다.")
+                    
                 save_score(score) 
 
             elif choice == '2':
