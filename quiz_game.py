@@ -41,8 +41,6 @@ def load_quiz_data():
             json.dump(default_quiz, file, ensure_ascii=False, indent=4) # 파일 복구!
             
         return default_quiz
-    
-# 1. 퀴즈 클래스
 class Quiz:
     def __init__(self, question, options, answer):
         self.question = question
@@ -55,20 +53,9 @@ class Quiz:
             "options": self.options,
             "answer": self.answer
         }
-    def check_answer(self, user_input):
-    # user_input은 사용자가 입력한 번호(예: "2")
-        try:
-            idx = int(user_input) - 1  # 1번을 입력하면 0번 인덱스
-            # 선택한 번호가 범위 내에 있는지 확인
-            if 0 <= idx < len(self.options):
-                selected_answer = self.options[idx]
-                return selected_answer == self.answer
-            else:
-                return False
-        except ValueError:
-            return False
 
-# 2. 게임 엔진 클래스
+    def check_answer(self, user_input):
+        return user_input == self.answer
 class QuizGame:
     def __init__(self, questions):
         self.questions = questions
@@ -76,24 +63,44 @@ class QuizGame:
 
     def play(self):
         self.score = 0
+
         print(f"\n총 {len(self.questions)}문제를 시작합니다!")
+
         for i, q in enumerate(self.questions, 1):
             print(f"\nQ{i}. {q.question}")
+
             for idx, opt in enumerate(q.options, 1):
                 print(f"  {idx}) {opt}")
-            
-            try:
-                user_ans = int(input("정답 번호를 입력하세요."))
-                if q.check_answer(user_ans):
-                    print("✅ 정답입니다!")
-                    self.score += 1
-                else:
-                    print(f"❌ 틀렸습니다. 정답은 '{q.answer}'입니다.")
 
-            except (ValueError, IndexError):
-                print("⚠️ 잘못된 입력입니다. 오답 처리됩니다.")
-        
+            # 정답을 입력할 때까지 이 문제에서 기다림
+            while True:
+                try:
+                    raw = input("원하는 메뉴 번호를 입력하세요(1~5): ").strip()
+
+                    if raw == "":
+                        print("⚠️ 번호를 입력해주세요.")
+                        continue
+
+                    user_ans = int(raw)
+
+                    if user_ans < 1 or user_ans > 5:
+                        print("⚠️ 1~5 사이의 번호를 입력해주세요.")
+                        continue
+
+                    break
+
+                except ValueError:
+                    print("⚠️ 숫자만 입력해주세요.")
+
+            # 정답 확인
+            if q.check_answer(str(user_ans)):
+                print("✅ 정답입니다!")
+                self.score += 1
+            else:
+                print(f"❌ 틀렸습니다. 정답은 '{q.answer}'입니다.")
+
         print(f"\n게임 종료! 최종 점수: {self.score}/{len(self.questions)}")
+
         return self.score
 
 # 3. 데이터 관리 함수들
@@ -118,19 +125,19 @@ def save_data(data):
 
 # 1. 최고 점수 불러오기
 def load_high_score():
-    data = load_data()          # 학생님이 만든 함수로 데이터를 불러옵니다.
-    scores = data["scores"]     # "scores" 리스트를 가져옵니다.
+    data = load_data()                                  # 학생님이 만든 함수로 데이터를 불러옵니다.
+    scores = data["scores"]                             # "scores" 리스트를 가져옵니다.
     
-    if len(scores) > 0:         # 리스트에 점수가 하나라도 있다면?
-        return max(scores)      # max() 함수로 가장 높은 점수를 찾아서 반환!
+    if len(scores) > 0:                                 # 리스트에 점수가 하나라도 있다면?
+        return max(score["score"] for score in scores)  # max() 함수로 가장 높은 점수를 찾아서 반환!
     else:
-        return 0                # 아직 게임을 한 번도 안 했다면 0점 반환!
+        return 0                                        # 아직 게임을 한 번도 안 했다면 0점 반환!
 
 # 2. 내 점수 저장하기
 def save_score(my_score):
-    data = load_data()          # 1. 기존 데이터를 불러옵니다.
-    data["scores"].append(my_score) # 2. "scores" 리스트에 내 점수를 추가합니다.
-    save_data(data)             # 3. 변경된 데이터를 다시 파일에 저장합니다.
+    data = load_data()               # 1. 기존 데이터를 불러옵니다.
+    data["scores"].append(my_score)  # 2. "scores" 리스트에 내 점수를 추가합니다.
+    save_data(data)                  # 3. 변경된 데이터를 다시 파일에 저장합니다.
     
 def save_score(score):
     data = load_data()
@@ -148,7 +155,7 @@ def add_quiz():
     options = []
     for i in range(4):
         options.append(input(f"보기 {i+1}번을 입력하세요: "))
-    answer = input("정답 내용을 입력하세요 (보기 중 하나와 일치해야 함): ")
+    answer = input("정답 번호를 입력하세요 (1~4): ").strip()
     
     data = load_data()
     new_quiz = Quiz(question, options, answer)
