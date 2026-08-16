@@ -3,7 +3,15 @@
 ---
 <dr>
 
-> ## 파이썬 퀴즈 프로젝트 진행 기록 
+> ## 1) 실행 환경
+- **OS** : macOS Sequoia 15.7.7
+- **Shell** : zsh
+- **Python** : 3.12.13
+- **Git** : 2.54.0
+- **Editor** : Visual Studio Code
+
+
+> ## 2) 파이썬 퀴즈 프로젝트 진행 기록 
 
 ### ① 프로젝트 기초 공사 (작업실 세팅)
 - mkdir python_quiz : 프로젝트 폴더 생성 
@@ -154,7 +162,6 @@ game.play()
 - **f-string : (f"문자열")** 문자열 앞에 f를 붙이고 중괄호 {} 안에 변수를 넣으면, 글자와 데이터를 아주 쉽게 섞어서 출력할 수 있는 마법의 문법. (f"최종 점수: {self.score}점")
 - **range()** : 숫자의 범위를 만들어주는 함수. range(4)는 0, 1, 2, 3을 만들어냄.
 - **input()** : 프로그램 실행 중 사용자에게 키보드로 값을 입력받는 함수. (입력받은 값은 무조건 '문자'로 취급됨)
-- **int(**) : 데이터를 정수(숫자)로 변환해 주는 함수. 사용자가 입력한 문자("1")를 숫자(1)로 바꿔서 정답과 비교하기 위해 int(input()) 형태로 사용.
 - **return** : 함수나 메서드가 작업을 끝내고 결과값을 호출한 곳으로 돌려주는 키워드.
 - **+= (더하기 할당 연산자)** : 기존 값에 더해서 다시 저장해라! self.score += 1은 self.score = self.score + 1과 같은 뜻.
 - **len()** : 리스트 같은 바구니 안에 데이터가 몇 개 들어있는지 **길이(개수)**를 세어주는 내장 함수. (len(self.questions) → 퀴즈가 총 몇 문제인지 알려줌)
@@ -295,7 +302,7 @@ while True:
 - **KeyboardInterrupt** : 사용자가 프로그램 실행 중에 강제로 Ctrl + C를 눌러서 끄려고 할 때 발생하는 에러 이름.
 
 ### ⑦ JSON 데이터 연동 (파일 입출력)
-- 데이터 분리: 퀴즈 데이터를 코드 내부에 두지 않고, quizzes.json이라는 외부 파일로 분리하여 관리 (데이터 관리의 효율성 증대).
+- 데이터 분리: 퀴즈 데이터를 코드 내부에 두지 않고, state.json이라는 외부 파일로 분리하여 관리 (데이터 관리의 효율성 증대).
 - 데이터 로드 기능: json 모듈을 사용하여 파일에 저장된 데이터를 파이썬 객체(Quiz 리스트)로 변환하는 load_quizzes() 함수 구현.
 - main 메뉴 시스템: def main() 함수를 정의하여 프로그램의 시작점을 만들고, 그 안에서 while 반복문과 if-elif-else 조건문을 통해 사용자가 기능을 선택할 수 있는 인터페이스 구축.
 ```zsh
@@ -492,9 +499,7 @@ datetime.datetime.now() 대신 datetime.now()라고 짧게 쓸 수 있게 해줌
 - **datetime.now()** : 현재 컴퓨터의 날짜와 시간 정보를 가져오는 함수.
 - **strftime()** : 'string format time'의 약자로, 날짜 데이터를 우리가 원하는 글자 형식(예: %Y년 %m월 %d일)으로 예쁘게 바꿔주는 함수.
 - **json.dump()** : 파이썬의 리스트나 딕셔너리 데이터를 JSON 파일에 '덤프(저장)'하는 함수.
-- **json.load()** : JSON 파일에 저장된 텍스트를 파이썬에서 계산할 수 있는 데이터로 '로드(불러오기)'하는 함수.
 - **with open()** : 파일을 열고 닫는 과정을 안전하게 처리해주는 문법. (파일 작업 시 필수!)
-- **try - except** : 프로그램 실행 중 발생할 수 있는 에러(예: 파일이 없음)를 미리 예상해서 부드럽게 처리하는 예외 처리 문법.
 
 ### ⑨ 퀴즈 관리 및 기록 조회 시스템 통합 (메뉴 2, 3, 4번 구현)
 - 퀴즈 추가 기능 (2번) : 사용자로부터 새로운 문제, 보기, 정답을 입력받아 Quiz 객체로 생성하고, 이를 quizzes.json에 영구적으로 저장.
@@ -533,8 +538,76 @@ def main():
 - 숫자 변환 오류 처리 : `int()` 변환 과정에서 발생하는 `ValueError`를 `try/except`로 처리하여 프로그램이 종료되지 않도록 구성.
 - Ctrl+C 처리 : 프로그램 실행 중 `KeyboardInterrupt`가 발생하면 안내 메시지를 출력하고 안전하게 종료.
 - EOFError 처리 : 입력 스트림 종료 시 `EOFError`를 처리하여 traceback 없이 안내 메시지를 출력하고 안전하게 종료.
+```zsh
+           while True:
+                try:
+                    raw = input("원하는 메뉴 번호를 입력하세요(1~5): ").strip()
 
-> ## Git 저장소 복제 실습 데이타
+                    if raw == "":
+                        print("⚠️ 번호를 입력해주세요.")
+                        continue
+
+                    user_ans = int(raw)
+
+                    if user_ans < 1 or user_ans > 5:
+                        print("⚠️ 1~5 사이의 번호를 입력해주세요.")
+                        continue
+
+                    break
+
+                except ValueError:
+                    print("⚠️ 숫자만 입력해주세요.")
+```
+```zsh
+        except KeyboardInterrupt:
+            print("\n\n🚨 강제 종료되었습니다. 안녕히 가세요!")
+            break
+        except EOFError:
+            print("\n\n🚨 입력이 끊겼습니다. 게임을 종료합니다.")
+            break
+```
+
+#### * **파이썬 오류 및 예외 처리 용어**
+- **strip()** : 문자열 앞뒤의 공백을 제거하는 메서드.
+- **ValueError** : 잘못된 값으로 인해 형 변환 등에 실패했을 때 발생하는 오류
+- **KeyboardInterrupt** : Ctrl+C를 눌렀을 때 발생하는 예외.
+- **EOFError** : 입력 스트림이 종료되었을 때 발생하는 예외.
+- **continue** : 현재 반복을 중단하고 다음 반복으로 넘어가는 명령어.
+- 실행화면 : ![테스트 결과](./images/except.png)
+
+### ⑪ 파일 구조 및 역할 분리
+- quiz.py : Quiz 클래스 담당(퀴즈 데이터 관리)
+- quizgame.py : QuizGame 클래스 및 게임 기능 담당
+- main.py : 프로그램 실행 및 메뉴 관리
+- state.json : 퀴즈와 점수 데이터 저장
+```zsh
+#### 파일 간 연결 구조
+main.py
+   │
+   ├── Quiz ──────→ quiz.py
+   │
+   └── QuizGame ──→ quizgame.py
+                      │
+                      ├── load_data()
+                      ├── load_high_score()
+                      ├── save_score()
+                      ├── add_quiz()
+                      ├── view_quizzes()
+                      └── show_scores()
+```
+```zsh
+#### 파일 구조
+python_quiz/
+├── main.py
+├── quiz.py
+├── quizgame.py
+├── state.json
+├── README.md
+├── .gitignore
+└── images/
+```
+
+> ## 3) Git 저장소 복제 실습 데이타
 - 실행화면 : ![테스트 결과](./images/clone.png)
 - 실행화면 : ![테스트 결과](./images/merge.png)
 - 실행화면 : ![테스트 결과](./images/pull.png)
