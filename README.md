@@ -652,6 +652,7 @@ python_quiz/
 -git init, git add, git commit, git push
 - 실행화면 : ![Git 저장소 clone 실습 실행화면](./images/clone.png)
 - 실행화면 : ![Git merge 결과](./images/merge.png)
+- 실행화면 : ![Git checkout 브랜치 생성 및 전환 실행화면](./images/checkout.png)
 - 실행화면 : ![git log --oneline --graph 브랜치 생성 및 병합 결과](./images/merge_result.png)
 - 실행화면 : ![pull 실습 실행화면](./images/pull.png)
 
