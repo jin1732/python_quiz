@@ -316,10 +316,8 @@ while True:
 - **JSON의 특징** : JSON은 사람이 읽고 수정하기 쉬운 텍스트 기반의 데이터 형식이며, Python의 리스트와 딕셔너리 구조와 잘 연결되어 데이터 저장과 불러오기에 편리하다.
 - **JSON 사용의 한계** : 퀴즈 데이터가 1000개 이상으로 많아지면 JSON 파일 전체를 읽고 쓰는 작업이 커져 처리 효율이 떨어질 수 있고 여러 사용자가 동시에 데이터를 수정해야 하는 서비스에는 JSON보다 SQLite, MySQL 등의 데이터베이스를 사용하는 것이 적합하다.
 - 데이터 로드 기능: json 모듈을 사용하여 JSON 파일에 저장된 퀴즈 데이터를 Python 객체(Quiz 리스트)로 변환하는 load_quizzes() 함수를 구현하였다.
-- main 메뉴 시스템: def main() 함수를 정의하여 프로그램의 시작점을 만들고, 그 안에서 while 반복문과 if/elif/else 조건문을 통해 사용자가 기능을 선택할 수 있는 인터페이스를 구축하였다.
+- main 메뉴 시스템: def main() 함수를 정의하여 **프로그램의 전체 실행 흐름을 한곳에 모아 관리**하고, while 반복문과 if/elif/else 조건문을 통해 사용자가 기능을 선택할 수 있는 메뉴를 구현하였다.
 - 프로그램 시작점 지정: if __name__ == "__main__":을 사용하여 해당 파일을 직접 실행했을 때만 main() 함수가 실행되도록 구성하였다.
-- state.json이 없는 경우 : 프로그램이 오류로 종료되지 않도록 기본 퀴즈 데이터와 빈 점수 목록을 생성하여 초기 데이터로 사용하도록 처리하였다.
-- state.json이 손상되어 JSON 형식으로 읽을 수 없는 경우 : JSONDecodeError를 처리하고, 안내 메시지를 출력한 후 기본 데이터로 복구하여 프로그램을 계속 실행할 수 있도록 구성하였다.
 
 ```zsh
 import json #맨 윗줄에 json 모듈 불러오기
@@ -442,7 +440,7 @@ def main():
             print("\n\n🚨 입력이 끊겼습니다. 게임을 종료합니다.")
             break
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # 이 파일을 직접 실행한 경우에만 main()을 실행해라.
     main()
 ```
 
@@ -527,8 +525,9 @@ datetime.datetime.now() 대신 datetime.now()라고 짧게 쓸 수 있게 해줌
 - 퀴즈 목록 보기 (3번) : 저장된 퀴즈 데이터를 불러와 번호와 함께 목록으로 출력.
 - 최근 점수 확인 (4번) : 저장된 점수 기록과 날짜를 불러와 화면에 출력.
 - **데이터 통합 관리 : 퀴즈 데이터와 점수 기록을 하나의 `state.json` 파일로 통합하여 관리.**
-- 초기 개발 단계에서는 `main()` 함수에서 `while` 반복문과 `if/elif/else` 조건문을 이용하여 메뉴 기능을 직접 관리하였다.
-- 이후 기능을 정리하면서 게임 전체 흐름과 메뉴 관리를 `QuizGame` 클래스가 담당하도록 구조를 개선하였다.
+- state.json이 없는 경우 : 프로그램이 오류로 종료되지 않도록 기본 퀴즈 데이터와 빈 점수 목록을 생성하여 초기 데이터로 사용하도록 처리하였다.
+- state.json이 손상되어 JSON 형식으로 읽을 수 없는 경우 : JSONDecodeError를 처리하고, 안내 메시지를 출력한 후 기본 데이터로 복구하여 프로그램을 계속 실행할 수 있도록 구성하였다.
+- 구조 개선 : 초기에는 main()에서 메뉴 기능을 직접 관리했으나, 이후 QuizGame 클래스가 게임 전체 흐름과 메뉴 관리를 담당하도록 구조를 개선하였다.
 
 ```zsh
 #### 메뉴 시스템 초기 구현 코드
@@ -548,6 +547,25 @@ def main():
         elif choice == '5':
             print("게임을 종료합니다. 감사합니다!")
             break
+            
+def load_data():
+    try:
+        with open("state.json", "r", encoding="utf-8") as file:
+            return json.load(file)
+
+    except FileNotFoundError:
+        print("⚠️ state.json이 없습니다. 기본 데이터를 생성합니다.")
+        return {
+            "quizzes": [],
+            "scores": []
+        }
+
+    except json.JSONDecodeError:
+        print("⚠️ state.json의 형식이 잘못되었습니다. 기본 데이터로 복구합니다.")
+        return {
+            "quizzes": [],
+            "scores": []
+        }
 ```
 - 실행화면 : ![퀴즈 추가 결과](./images/quiz_add_result.png)
 - 실행화면 : ![퀴즈 목록 조회 결과](./images/quiz_list_result.png)

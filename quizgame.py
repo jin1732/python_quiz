@@ -269,11 +269,11 @@ class QuizGame:
         )
 
         if self.score == len(self.questions):
-            print("🏆 만점입니다! 정말 대단해요!")
+            print("🏆 완벽합니다! 당신은 진정한 천만 영화 마스터!")
         elif self.score >= len(self.questions) // 2:
-            print("😊 잘했어요! 조금만 더 노력하면 만점이에요!")
+            print("👍 훌륭합니다! 영화를 꽤 좋아하시는군요!")
         else:
-            print("💪 아쉬워요! 다시 도전해보세요!")
+            print("🎬 아쉽네요. 이번 주말엔 영화 감상 어떠신가요?")
 
 
         self.save_score()
