@@ -644,11 +644,12 @@ python_quiz/
   - `score` : 획득 점수
   - `date` : 점수를 기록한 날짜와 시간
 
-퀴즈 추가 시 `quizzes`에 데이터가 추가되고,
-게임 결과가 저장될 때 `scores`에 기록이 추가된다.
+퀴즈 하나는 `question`, `options`, `answer` 필드로 구성되며,
+`quizzes` 목록 안에 여러 개의 퀴즈 데이터가 저장된다.
 ```
 
 > ## 3) Git 저장소 복제 실습 데이타
+-git init, git add, git commit, git push
 - 실행화면 : ![Git 저장소 clone 실습 실행화면](./images/clone.png)
 - 실행화면 : ![Git merge 결과](./images/merge.png)
 - 실행화면 : ![git log --oneline --graph 브랜치 생성 및 병합 결과](./images/merge_result.png)
