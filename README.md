@@ -624,6 +624,7 @@ python_quiz/
 > ## 3) Git 저장소 복제 실습 데이타
 - 실행화면 : ![Git 저장소 clone 실습 실행화면](./images/clone.png)
 - 실행화면 : ![Git merge 결과](./images/merge.png)
+- 실행화면 : ![git log --oneline --graph 브랜치 생성 및 병합 결과](./images/merge_result.png)
 - 실행화면 : ![pull 실습 실행화면](./images/pull.png)
 
 > ## 4) commit 관리
