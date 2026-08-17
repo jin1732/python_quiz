@@ -71,7 +71,7 @@ if __name__ == "__main__":
     print("정답 번호:", test_quiz.answer)
     print("테스트 성공! 클래스가 완벽하게 작동합니다. 🎉")
 ```
-- 실행화면 : ![테스트 결과](./images/test.png)
+- 실행화면 : ![Quiz 클래스 임시 데이터 테스트](./images/class_test.png)
 
 #### * **파이썬 클래스 기초 용어 & 기호**
 - **() 소괄호 : 실행 or 재료 전달** game.start_game() 이 기능 실행해!, Quiz("질문") 괄호 안의 재료(데이터) 전달!  
@@ -156,7 +156,7 @@ game = QuizGame(movie_quizzes)
 # 게임 시작! (버튼 누르기)
 game.play()
 ```
-- 실행화면 : ![테스트 결과](./images/test2.png)
+- 실행화면 : ![QuizGame 퀴즈 실행 및 점수 계산](./images/quiz_play.png)
 
 #### * **파이썬 클래스 기초 용어 & 기호**
 - **f-string : (f"문자열")** 문자열 앞에 f를 붙이고 중괄호 {} 안에 변수를 넣으면, 글자와 데이터를 아주 쉽게 섞어서 출력할 수 있는 마법의 문법. (f"최종 점수: {self.score}점")
@@ -290,8 +290,8 @@ while True:
         print("\n\n🚨 입력이 끊겼습니다. 게임을 종료합니다.")
         break
 ```
-- 실행화면 : ![테스트 결과](./images/test3.png)
-- 실행화면 : ![테스트 결과](./images/test4.png)
+- 실행화면 : ![5문제 퀴즈 실행 및 채점 결과](./images/quiz_play_result.png)
+- 실행화면 : ![메인 메뉴 및 입력 예외 처리](./images/main_menu_input.png)
 
 #### * **파이썬 클래스 기초 용어 & 기호**
 - **for 루프 : (반복문)** 반복할 횟수가 명확하게 정해져 있을 때 데이터를 하나씩 꺼내며 반복 작업. (for quiz in self.questions: 질문 상자에서 퀴즈를 하나씩 꺼내서 quiz라고 부르겠다!)
@@ -301,10 +301,13 @@ while True:
 - **try / except : (예외 처리)** 에러가 날 것 같은 코드를 try에 넣고, 만약 에러가 터지면 프로그램이 죽는 대신 except로 빠져서 내가 준비한 대처법을 실행하게 만드는 안전장치.
 - **KeyboardInterrupt** : 사용자가 프로그램 실행 중에 강제로 Ctrl + C를 눌러서 끄려고 할 때 발생하는 에러 이름.
 
-### ⑦ JSON 데이터 연동 (파일 입출력)
+### ⑦ JSON 데이터 연동 
 - 데이터 분리: 퀴즈 데이터를 코드 내부에 두지 않고, state.json이라는 외부 파일로 분리하여 관리 (데이터 관리의 효율성 증대).
-- 데이터 로드 기능: json 모듈을 사용하여 파일에 저장된 데이터를 파이썬 객체(Quiz 리스트)로 변환하는 load_quizzes() 함수 구현.
-- main 메뉴 시스템: def main() 함수를 정의하여 프로그램의 시작점을 만들고, 그 안에서 while 반복문과 if-elif-else 조건문을 통해 사용자가 기능을 선택할 수 있는 인터페이스 구축.
+- 데이터 로드 기능: json 모듈을 사용하여 JSON 파일에 저장된 퀴즈 데이터를 Python 객체(Quiz 리스트)로 변환하는 load_quizzes() 함수를 구현하였다.
+- main 메뉴 시스템: def main() 함수를 정의하여 프로그램의 시작점을 만들고, 그 안에서 while 반복문과 if/elif/else 조건문을 통해 사용자가 기능을 선택할 수 있는 인터페이스를 구축하였다.
+- 프로그램 시작점 지정: if __name__ == "__main__":을 사용하여 해당 파일을 직접 실행했을 때만 main() 함수가 실행되도록 구성하였다.
+- state.json이 없는 경우 : 프로그램이 오류로 종료되지 않도록 기본 퀴즈 데이터와 빈 점수 목록을 생성하여 초기 데이터로 사용하도록 처리하였다.
+- state.json이 손상되어 JSON 형식으로 읽을 수 없는 경우 : JSONDecodeError를 처리하고, 안내 메시지를 출력한 후 기본 데이터로 복구하여 프로그램을 계속 실행할 수 있도록 구성하였다.
 ```zsh
 import json #맨 윗줄에 json 모듈 불러오기
 # 1. 클래스들 (Quiz, QuizGame)
@@ -468,18 +471,20 @@ quiz_project/
 ```
 
 ### ⑧ 점수 저장 및 기록 확인 기능 구현
-- 점수 저장 기능 : 게임이 끝나면 datetime 모듈을 사용해 현재 날짜/시간과 함께 점수를 scores.json 파일에 저장.
-- 데이터 누적 : 기존에 저장된 점수 리스트를 불러와서 새로운 점수를 추가(append)한 뒤 다시 저장하는 방식으로 기록을 유지.
-- 역대 기록 조회 : scores.json 파일을 읽어와서 사용자가 여태까지 획득한 점수들을 날짜별로 화면에 출력.
-- 예외 처리 : scores.json 파일이 없거나 데이터가 비어있는 경우에도 프로그램이 멈추지 않도록 try-except 문법 적용.
+- 점수 저장 기능 : `datetime` 모듈을 사용하여 현재 날짜와 시간과 함께 점수를 저장.
+- 데이터 누적 : 기존 점수 기록을 불러와 새로운 점수를 추가한 후 다시 저장하는 방식으로 기록을 유지.
+- 역대 기록 조회 : 저장된 점수와 날짜를 불러와 화면에 출력.
+- 초기 개발 단계에서는 `scores.json`을 사용하여 점수 데이터를 별도로 저장하고 관리하였다.
+- 이후 기능을 통합하면서 퀴즈 데이터와 점수 데이터를 프로젝트 루트의 `state.json`으로 통합하였다.
 ```zsh
-# [코드] datetime 활용 및 점수 저장 로직
+#### 초기 점수 저장 기능 구현 코드]
+
 from datetime import datetime  # datetime 모듈에서 datetime 클래스만 가져오기
 
 # [코드] 점수 저장 및 조회 핵심 로직
 def save_score(score):
     # 현재 시간을 '2023-10-27 15:30' 형식의 문자열로 변환
-    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     new_score = {"date": now, "score": score}
     # ... (파일 읽고 쓰기 로직) ...
 
@@ -491,7 +496,7 @@ def show_scores():
     except FileNotFoundError:
         print("기록이 없습니다.")
 ```
-- 실핼화면 : ![테스트 결과](./images/test5.png)
+- 실핼화면 : ![게임 점수 저장 결과](./images/score_save_result.png)
 
 #### * **파이썬 파일 입출력 & 시스템 용어**
 - **from 모듈 import 기능** : 모듈 전체가 아닌 필요한 기능만 골라서 가져오는 문법.  
@@ -502,10 +507,15 @@ datetime.datetime.now() 대신 datetime.now()라고 짧게 쓸 수 있게 해줌
 - **with open()** : 파일을 열고 닫는 과정을 안전하게 처리해주는 문법. (파일 작업 시 필수!)
 
 ### ⑨ 퀴즈 관리 및 기록 조회 시스템 통합 (메뉴 2, 3, 4번 구현)
-- 퀴즈 추가 기능 (2번) : 사용자로부터 새로운 문제, 보기, 정답을 입력받아 Quiz 객체로 생성하고, 이를 quizzes.json에 영구적으로 저장.
-- 퀴즈 목록 보기 (3번) : 저장된 JSON 데이터를 Quiz 객체 리스트로 불러와, enumerate()를 활용해 번호와 함께 전체 문제 리스트를 화면에 출력.
-- 최근 점수 확인 (4번) : scores.json에 기록된 과거 게임 점수와 날짜 데이터를 불러와 사용자에게 역대 기록을 브리핑.
+- 퀴즈 추가 기능 (2번) : 사용자로부터 새로운 문제, 보기 4개, 정답 번호를 입력받아 퀴즈를 추가하고 JSON 파일에 저장.
+- 퀴즈 목록 보기 (3번) : 저장된 퀴즈 데이터를 불러와 번호와 함께 목록으로 출력.
+- 최근 점수 확인 (4번) : 저장된 점수 기록과 날짜를 불러와 화면에 출력.
+- **데이터 통합 관리 : 퀴즈 데이터와 점수 기록을 하나의 `state.json` 파일로 통합하여 관리.**
+- 초기 개발 단계에서는 `main()` 함수에서 `while` 반복문과 `if/elif/else` 조건문을 이용하여 메뉴 기능을 직접 관리하였다.
+- 이후 기능을 정리하면서 게임 전체 흐름과 메뉴 관리를 `QuizGame` 클래스가 담당하도록 구조를 개선하였다.
 ```zsh
+#### 메뉴 시스템 초기 구현 코드
+
 def main():
     while True:
         print("\n=== 🎬 천만 영화 퀴즈 게임 ===")
@@ -522,9 +532,9 @@ def main():
             print("게임을 종료합니다. 감사합니다!")
             break
 ```
-- 실행화면 : ![테스트 결과](./images/test6.png)
-- 실행화면 : ![테스트 결과](./images/test7.png)
-- 실행화면 : ![테스트 결과](./images/test8.png)
+- 실행화면 : ![퀴즈 추가 결과](./images/quiz_add_result.png)
+- 실행화면 : ![퀴즈 목록 조회 결과](./images/quiz_list_result.png)
+- 실행화면 : ![점수 기록 조회 결과](./images/score_history_result.png)
 
 #### * **파이썬 인터페이스 및 데이터 활용 용어**
 - **enumerate(리스트, 시작번호)** : 리스트의 요소를 꺼낼 때 순서(인덱스)를 함께 제공하는 함수. 퀴즈 목록에 1번, 2번 등 번호를 붙일 때 유용함.
@@ -579,7 +589,11 @@ def main():
 - quiz.py : Quiz 클래스 담당(퀴즈 데이터 관리)
 - quizgame.py : QuizGame 클래스 및 게임 기능 담당
 - main.py : 프로그램 실행 및 메뉴 관리
-- state.json : 퀴즈와 점수 데이터 저장
+- state.json : 퀴즈와 점수 데이터를 저장하는 프로젝트 루트의 데이터 파일
+  - quizzes : 등록된 퀴즈의 문제, 보기, 정답 정보를 저장
+  - scores : 게임 점수와 점수를 기록한 날짜/시간을 저장
+- .gitignore : Git에 올리지 않을 파일과 폴더를 지정하는 설정 파일
+- __pycache__ : Python이 실행될 때 생성되는 임시 바이트코드 파일이 저장되는 폴더이며, .gitignore에 등록하여 GitHub에 업로드되지 않도록 관리
 ```zsh
 #### 파일 간 연결 구조
 main.py
@@ -608,6 +622,6 @@ python_quiz/
 ```
 
 > ## 3) Git 저장소 복제 실습 데이타
-- 실행화면 : ![테스트 결과](./images/clone.png)
-- 실행화면 : ![테스트 결과](./images/merge.png)
-- 실행화면 : ![테스트 결과](./images/pull.png)
+- 실행화면 : ![Git 저장소 clone 실습 실행화면](./images/clone.png)
+- 실행화면 : ![Git merge 결과](./images/merge.png)
+- 실행화면 : ![pull 실습 실행화면](./images/pull.png)
