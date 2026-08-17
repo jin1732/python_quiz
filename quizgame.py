@@ -268,6 +268,14 @@ class QuizGame:
             f"{self.score}/{len(self.questions)}"
         )
 
+        if self.score == len(self.questions):
+            print("🏆 만점입니다! 정말 대단해요!")
+        elif self.score >= len(self.questions) // 2:
+            print("😊 잘했어요! 조금만 더 노력하면 만점이에요!")
+        else:
+            print("💪 아쉬워요! 다시 도전해보세요!")
+
+
         self.save_score()
 
     # ---------------------------------
