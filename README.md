@@ -43,9 +43,6 @@
 - __init__(초기화 메서드) : 클래스가 생성될 때 필요한 초기 변수(속성) 설정하기
 - 임시 데이터 테스트 : 만든 클래스로 객체를 생성해서 코드가 잘 실행되는지 확인하기
 
-<details>
-<summary>클래스 기본 구조 설계 코드 및 실행화면</summary>
-
 ```zsh
 # 1. 개별 퀴즈 데이터를 담는 클래스 (퀴즈 붕어빵 틀)
 class Quiz:
@@ -83,9 +80,6 @@ if __name__ == "__main__":
 
 - 실행화면 : ![Quiz 클래스 임시 데이터 테스트](./images/class_test.png)
 
-</details>  
-
-
 #### * **파이썬 클래스 기초 용어 & 기호**
 - **() 소괄호 : 실행 or 재료 전달** game.start_game() 이 기능 실행해!, Quiz("질문") 괄호 안의 재료(데이터) 전달!  
   * def 이름(재료이름): "나한테 이 재료를 줘!" (규칙 정하기 / 준비)  
@@ -113,9 +107,6 @@ if __name__ == "__main__":
 - QuizGame 클래스 기능 추가 : 퀴즈들을 하나씩 꺼내서 사용자에게 풀게 하고 점수를 계산하는 play() 메서드 만들기
 - 사용자 입력 받기 : input() 함수를 사용해 플레이어가 직접 키보드로 정답을 입력하도록 구현
 - 게임 실행 : 실제 퀴즈 데이터(객체)를 리스트에 담아 게임기에 넣고 작동시키기
-
-<details>
-<summary>클래스 기능(메서드) 구현 코드 및 실행화면</summary>
 
 ```zsh
 class Quiz:
@@ -175,8 +166,6 @@ game.play()
 ```
 - 실행화면 : ![QuizGame 퀴즈 실행 및 점수 계산](./images/quiz_play.png)
 
-<details>
-
 #### * **파이썬 클래스 기초 용어 & 기호**
 - **f-string : (f"문자열")** 문자열 앞에 f를 붙이고 중괄호 {} 안에 변수를 넣으면, 글자와 데이터를 아주 쉽게 섞어서 출력할 수 있는 마법의 문법. (f"최종 점수: {self.score}점")
 - **range()** : 숫자의 범위를 만들어주는 함수. range(4)는 0, 1, 2, 3을 만들어냄.
@@ -191,9 +180,6 @@ game.play()
 - 조건문 분기 처리 : if/elif/else를 활용해 사용자가 입력한 번호(1~5)에 따라 퀴즈 풀기, 추가, 목록 보기, 점수 확인, 종료 기능이 각각 실행되도록 길을 나누어 줌.
 - 점수별 피드백 제공 : 게임 종료 후 최종 점수에 따라 다른 결과 메시지(만점/보통/아쉬움)를 출력하여 사용자 경험(UX) 개선.
 - 예외 처리 (에러 방지) : 사용자가 실수로 빈칸을 입력하거나 문자를 입력했을 때 프로그램이 튕기지 않도록 try/except와 strip()을 활용해 안전하게 처리. Ctrl+C 입력 시에도 부드럽게 종료되도록 구현.
-
-<details>
-<summary>천만 영화 퀴즈 5문제 실행 및 메인 메뉴 시스템 구축 코드 및 실행화면</summary>
 
  ```zsh
  class Quiz:
@@ -316,8 +302,6 @@ while True:
 - 실행화면 : ![5문제 퀴즈 실행 및 채점 결과](./images/quiz_play_result.png)
 - 실행화면 : ![메인 메뉴 및 입력 예외 처리](./images/main_menu_input.png)
 
-<details>
-
 #### * **파이썬 클래스 기초 용어 & 기호**
 - **for 루프 : (반복문)** 반복할 횟수가 명확하게 정해져 있을 때 데이터를 하나씩 꺼내며 반복 작업. (for quiz in self.questions: 질문 상자에서 퀴즈를 하나씩 꺼내서 quiz라고 부르겠다!)
 - **while 루프 : (조건 반복문)** 반복할 횟수는 모르지만, 특정 조건이 참(True)인 동안 계속해서 반복 작업. (while answer != "종료": 사용자가 "종료"라고 입력하지 않는 동안에는 계속 게임을 진행하겠다!)
@@ -336,9 +320,6 @@ while True:
 - 프로그램 시작점 지정: if __name__ == "__main__":을 사용하여 해당 파일을 직접 실행했을 때만 main() 함수가 실행되도록 구성하였다.
 - state.json이 없는 경우 : 프로그램이 오류로 종료되지 않도록 기본 퀴즈 데이터와 빈 점수 목록을 생성하여 초기 데이터로 사용하도록 처리하였다.
 - state.json이 손상되어 JSON 형식으로 읽을 수 없는 경우 : JSONDecodeError를 처리하고, 안내 메시지를 출력한 후 기본 데이터로 복구하여 프로그램을 계속 실행할 수 있도록 구성하였다.
-
-<details>
-<summary>JSON 데이터 연동 코드</summary>
 
 ```zsh
 import json #맨 윗줄에 json 모듈 불러오기
@@ -465,17 +446,12 @@ if __name__ == "__main__":
     main()
 ```
 
-<details>
-
 #### * **파이썬 파일 입출력 & 시스템 용어**
 - **import json** : 파이썬에서 JSON 형식의 데이터를 다룰 수 있게 해주는 도구 상자를 가져오는 명령어.
 - **with open(파일경로, "r") as f** : 파일을 여는 안전한 방법. with 블록이 끝나면 파일을 자동으로 닫아줌 ("r"은 읽기 모드).
 - **json.load(f)** : 파일(f)에 적힌 JSON 텍스트를 파이썬의 리스트나 딕셔너리로 마법처럼 변환해 주는 함수.
 - **ValueError** : 데이터의 타입이 맞지 않을 때 발생하는 에러. (예: 숫자를 기대했는데 "안녕"을 입력했을 때)
 - **if name == "main":** : 이 파일이 직접 실행될 때만 특정 코드(주로 main())를 작동시키라는 파이썬의 관례적인 약속.
-
-<details>
-<summary>Python 퀴즈 프로젝트 논리 구조도</summary>
 
 ```zsh
 
@@ -508,7 +484,6 @@ quiz_project/
 │
 └── if __name__ == "__main__":      # [실행 스위치]
 ```
-<details>
 
 ### ⑧ 점수 저장 및 기록 확인 기능 구현
 - 점수 저장 기능 : `datetime` 모듈을 사용하여 현재 날짜와 시간과 함께 점수를 저장.
@@ -516,9 +491,6 @@ quiz_project/
 - 역대 기록 조회 : 저장된 점수와 날짜를 불러와 화면에 출력.
 - 초기 개발 단계에서는 `scores.json`을 사용하여 점수 데이터를 별도로 저장하고 관리하였다.
 - 이후 기능을 통합하면서 퀴즈 데이터와 점수 데이터를 프로젝트 루트의 `state.json`으로 통합하였다.
-
-<details>
-<summary>점수 저장 및 기록 확인 기능 구현 코드 및 실행화면</summary>
 
 ```zsh
 #### 초기 점수 저장 기능 구현 코드]
@@ -542,8 +514,6 @@ def show_scores():
 ```
 - 실핼화면 : ![게임 점수 저장 결과](./images/score_save_result.png)
 
-<details>
-
 #### * **파이썬 파일 입출력 & 시스템 용어**
 - **from 모듈 import 기능** : 모듈 전체가 아닌 필요한 기능만 골라서 가져오는 문법.  
 datetime.datetime.now() 대신 datetime.now()라고 짧게 쓸 수 있게 해줌.
@@ -559,9 +529,6 @@ datetime.datetime.now() 대신 datetime.now()라고 짧게 쓸 수 있게 해줌
 - **데이터 통합 관리 : 퀴즈 데이터와 점수 기록을 하나의 `state.json` 파일로 통합하여 관리.**
 - 초기 개발 단계에서는 `main()` 함수에서 `while` 반복문과 `if/elif/else` 조건문을 이용하여 메뉴 기능을 직접 관리하였다.
 - 이후 기능을 정리하면서 게임 전체 흐름과 메뉴 관리를 `QuizGame` 클래스가 담당하도록 구조를 개선하였다.
-
-<details>
-<summary>퀴즈 관리 및 기록 조회 시스템 통합 (메뉴 2, 3, 4번 구현) 코드 및 실행화면</summary>
 
 ```zsh
 #### 메뉴 시스템 초기 구현 코드
@@ -586,8 +553,6 @@ def main():
 - 실행화면 : ![퀴즈 목록 조회 결과](./images/quiz_list_result.png)
 - 실행화면 : ![점수 기록 조회 결과](./images/score_history_result.png)
 
-<details>
-
 #### * **파이썬 인터페이스 및 데이터 활용 용어**
 - **enumerate(리스트, 시작번호)** : 리스트의 요소를 꺼낼 때 순서(인덱스)를 함께 제공하는 함수. 퀴즈 목록에 1번, 2번 등 번호를 붙일 때 유용함.
 - **리스트 조인 (' '.join)** : ', '.join(q.options)와 같이 리스트 안에 있는 여러 개의 보기를 하나의 예쁜 문자열로 합쳐서 보여주는 기능.
@@ -600,9 +565,6 @@ def main():
 - 숫자 변환 오류 처리 : `int()` 변환 과정에서 발생하는 `ValueError`를 `try/except`로 처리하여 프로그램이 종료되지 않도록 구성.
 - Ctrl+C 처리 : 프로그램 실행 중 `KeyboardInterrupt`가 발생하면 안내 메시지를 출력하고 안전하게 종료.
 - EOFError 처리 : 입력 스트림 종료 시 `EOFError`를 처리하여 traceback 없이 안내 메시지를 출력하고 안전하게 종료.
-
-<details>
-<summary>공통 입력 및 예외 처리 기능 구현 코드 및 실행화면</summary>
 
 ```zsh
            while True:
@@ -635,8 +597,6 @@ def main():
 
 - 실행화면 : ![테스트 결과](./images/except.png)
 
-<details>
-
 #### * **파이썬 오류 및 예외 처리 용어**
 - **strip()** : 문자열 앞뒤의 공백을 제거하는 메서드.
 - **ValueError** : 잘못된 값으로 인해 형 변환 등에 실패했을 때 발생하는 오류
@@ -659,9 +619,6 @@ def main():
       - date : 점수를 기록한 날짜와 시간
 - .gitignore : Git에 올리지 않을 파일과 폴더를 지정하는 설정 파일
 - __pycache__ : Python이 실행될 때 생성되는 임시 바이트코드 파일이 저장되는 폴더이며, .gitignore에 등록하여 GitHub에 업로드되지 않도록 관리
-
-<details>
-<summary>파일 구조 및 역할 분리 구조</summary>
 
 ```zsh
 #### 파일 간 연결 구조
@@ -704,18 +661,11 @@ python_quiz/
 퀴즈 하나는 `question`, `options`, `answer` 필드로 구성되며,
 `quizzes` 목록 안에 여러 개의 퀴즈 데이터가 저장된다.
 ```
-<details>
 
 > ## 3) Git 저장소 복제 실습 데이타
 -git init, git add, git commit, git push
-
-<details>
-<summary>Git 저장소 복제 실습 데이타 실행화면</summary>
-
 - 실행화면 : ![Git 저장소 clone 실습 실행화면](./images/clone.png)
 - 실행화면 : ![Git merge 결과](./images/merge.png)
 - 실행화면 : ![Git checkout 브랜치 생성 및 전환 실행화면](./images/checkout.png)
 - 실행화면 : ![git log --oneline --graph 브랜치 생성 및 병합 결과](./images/merge_result.png)
 - 실행화면 : ![pull 실습 실행화면](./images/pull.png)
-
-<details>
