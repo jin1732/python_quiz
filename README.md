@@ -79,11 +79,10 @@ if __name__ == "__main__":
     print("보기:", test_quiz.options)
     print("정답 번호:", test_quiz.answer)
     print("테스트 성공! 클래스가 완벽하게 작동합니다. 🎉")
-```
+</details>  ```
 
 - 실행화면 : ![Quiz 클래스 임시 데이터 테스트](./images/class_test.png)
 
-</details> 
 
 #### * **파이썬 클래스 기초 용어 & 기호**
 - **() 소괄호 : 실행 or 재료 전달** game.start_game() 이 기능 실행해!, Quiz("질문") 괄호 안의 재료(데이터) 전달!  
