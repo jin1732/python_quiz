@@ -672,6 +672,23 @@ python_quiz/
 퀴즈 하나는 `question`, `options`, `answer` 필드로 구성되며,
 `quizzes` 목록 안에 여러 개의 퀴즈 데이터가 저장된다.
 ```
+#### QuizGame 메서드 역할
+
+| 메서드 | 역할 |
+|---|---|
+| `__init__(self)` | `QuizGame` 객체가 만들어질 때 초기 설정을 하고 데이터를 불러옴 |
+| `create_default_quizzes(self)` | `state.json`이 없거나 손상됐을 때 사용할 기본 퀴즈 생성 |
+| `load_data(self)` | `state.json`에서 퀴즈와 점수 데이터를 불러옴 |
+| `save_data(self)` | 현재 퀴즈와 점수를 `state.json`에 저장 |
+| `show_menu(self)` | 게임 메뉴를 화면에 출력 |
+| `get_menu_choice(self)` | 사용자의 메뉴 번호를 입력받고 검증 |
+| `play_quiz(self)` | 퀴즈를 출제하고 답을 받아 점수를 계산 |
+| `save_score(self)` | 퀴즈 결과를 점수 기록에 저장 |
+| `get_high_score(self)` | 저장된 점수 중 최고 점수를 찾아 반환 |
+| `add_quiz(self)` | 사용자가 입력한 새 퀴즈를 추가하고 저장 |
+| `view_quizzes(self)` | 현재 등록된 퀴즈 목록을 보여줌 |
+| `show_scores(self)` | 최근 점수와 최고 점수를 보여줌 |
+| `run(self)` | 메뉴를 반복해서 보여주며 게임 전체 흐름을 관리 |
 
 > ## 3) Git 저장소 복제 실습 데이타
 -git init, git add, git commit, git push
